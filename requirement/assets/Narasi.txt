@@ -1,0 +1,22 @@
+Modul 
+
+1. manajement mahasiswa
+* dia daftar akun terlebih dahulu 
+* sudah daftar dia login terlebih dahulu dan masuk dalem tampilan Home
+* di tampilan home ada pilihan dashbord yaitu setting akun, Feedback, Dokumentasi Kegiatan, Sertifikat Kegiatan, Struktural LCC
+* setiap akun mahasiwa harus isi data, Nama Mahasiswa,Email, Nomor Telepon, Tanggal Lahir, Prodi, NIM
+* klo untuk akun user umum hanya nama, email,nomor Telepon
+* mahasiswa bisa bayar angsuran lcc lewat sistem dan kirim bukti transfer nya ( ini khusus akun mahasiswa bukan akun umum)
+
+
+2. Manajement Accounting
+* bisa melihat data mahasiwa
+* data notifikasi pembayaran
+* edit dan create data pembayaran mahasiswa
+* Accounting bisa melihat data umpan blaik peserta lcc
+
+3. Manajement Admin
+1. Admin bisa edit link drive dokumntasi, link drive sertifikat, edit struktural..
+2. hanya bisa melihat data keuangan aja
+3. bisa Create,Edit,Delet data mahasiswa
+4. admin  bisa melihat data hasil umpan balik
