@@ -199,4 +199,21 @@ class App extends BaseConfig
      * @see http://www.w3.org/TR/CSP/
      */
     public bool $CSPEnabled = false;
+
+    /**
+     * --------------------------------------------------------------------------
+     * Session Config
+     * --------------------------------------------------------------------------
+     * 
+     */
+
+     public $sessionDriver = 'CodeIgniter\Session\Handlers\DatabaseHandler';
+     public $sessionCookieName = 'ci_session';
+     public $sessionExpiration = 3600; // 1 hours
+     public $sessionSavePath = 'ci_sessions';
+     public $sessionMatchIP = true;
+     public $sessionTimeToUpdate = 120; // 5 minutes
+     public $cookieSecure = true; // HTTPS only
+     public $cookieHTTPOnly = true; // HTTP(S) only
+
 }
