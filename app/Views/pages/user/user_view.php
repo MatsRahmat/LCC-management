@@ -1,5 +1,9 @@
 <?= $this->extend('layouts/admin_layout.php') ?>
 
+<?= $this->section('nav') ?>
+<?= $this->include('partial/navbar.php') ?>
+<?= $this->endSection() ?>
+
 <?= $this->section('content') ?>
 <div>
     <table width="80%" class="table-auto border-collapse table-border">
@@ -73,6 +77,6 @@
         </tfoot>
     </table>
 
-    <?php var_dump($pagination) ?>
+    <?php //var_dump($pagination) ?>
 </div>
 <?= $this->endSection() ?>

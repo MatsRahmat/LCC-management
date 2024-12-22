@@ -14,9 +14,38 @@
 </head>
 
 <body>
-    <?= $this->renderSection('nav') ?>
-    <div class="m-20">
-        <?= $this->renderSection('content') ?>
+    <div class="grid grid-cols-6 bg-[#064470]">
+        <div class="px-2 py-3">
+            <div class=" space-y-3">
+                <div>
+                    <img src="logo" alt="Logo">
+                </div>
+                <div>
+                    <h2>LCC Actifity Platform</h2>
+                    <h3>Admin Panel</h3>
+                </div>
+            </div>
+            <nav class="mt-5">
+                <div>
+                    <ul>
+                        <li class="">
+                            <?= anchor(base_url('/a/admin/users'), 'Dashboard') ?>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <div class="h-screen col-span-5 grid grid-rows-11">
+            <div>
+                <?= $this->renderSection('nav') ?>
+            </div>
+            <div class="row-span-10 bg-slate-200 p-2 rounded-md">
+                <div class="bg-white rounded-md p-2">
+                    <?= $this->renderSection('content') ?>
+                </div>
+            </div>
+
+        </div>
     </div>
     <?= $this->renderSection('footer') ?>
     <?= $this->renderSection('script_js') ?>
