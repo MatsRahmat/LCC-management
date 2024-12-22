@@ -3,9 +3,14 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Enums\RoleEnum;
 use App\Helpers\PaginationData;
+use App\Models\ProgramStudyModel;
+use App\Models\RoleModel;
 use App\Models\UserModel;
+use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\ResponseInterface;
+use Exception;
 
 class UserController extends BaseController
 {
@@ -25,12 +30,13 @@ class UserController extends BaseController
         $search = $this->request->getVar('search');
         $page = $this->request->getVar('page') ?? 1;
 
-        $limit = 1;
+        $limit = 10;
         $offset = ($page - 1) * $limit;
 
         $builder = $this->builder;
         $builder->select('u.id, u.username, u.email, u.phone, u.nim, r.name role, ps.name prodi, u.created_by');
-        $builder->join('roles as r', 'r.id = u.role_id');
+        $builder->where('u.deleted_at IS NULL');
+        $builder->join('roles as r', 'r.id = u.role_id', 'left');
         $builder->join('program_studies ps', 'u.study_id = ps.id', 'left');
 
         if ($search) {
@@ -53,6 +59,168 @@ class UserController extends BaseController
      */
     public function add()
     {
-        return view('');
+        $roleModel = new RoleModel();
+        $prodiModel = new ProgramStudyModel();
+        $roles = $roleModel->whereNotIn('id', [RoleEnum::SUPER_ADMIN])->findAll();
+        $data = [
+            'page' => ['title' => 'Add User'],
+            'roles' => $roles,
+            'prodies' => $prodiModel->findAll()
+        ];
+        return view('pages/user/add_user_view', $data);
+    }
+
+    public function insert()
+    {
+        $db = \Config\Database::connect();
+        $session = \Config\Services::session();
+        $db->transBegin();
+        try {
+            $role = $this->request->getPost('role');
+            $username = $this->request->getPost('username');
+            $email = $this->request->getPost('email');
+            $phone = $this->request->getPost('phone');
+            $password = password_hash($this->request->getPost('password'), PASSWORD_DEFAULT);
+
+            $validationRule = [
+                'username'  => 'required|max_length[200]',
+                'email'     => 'required|valid_email',
+                'phone'     => 'required|max_length[13]|min_length[11]',
+                'password'  => 'required|max_length[200]|min_length[8]',
+            ];
+
+            $dataToInsert = [
+                'username'  => $username,
+                'email'     => $email,
+                'phone'     => $phone,
+                'password'  => $password,
+                'role_id'      => (int) $role
+            ];
+            if ($role == "4") {
+                $validationRule['nim']          = 'required|max_length[12]|min_length[12]';
+                $validationRule['birth_date']   = 'required';
+                $validationRule['prodi_id']        = 'required';
+
+                $dataToInsert['nim']        = $this->request->getPost('nim');
+                $dataToInsert['birth_date'] = $this->request->getPost('birth_date');
+                $dataToInsert['study_id']   = (int) $this->request->getPost('prodi');
+            }
+
+            if (! $this->validate($validationRule)) {
+                $session->setFlashdata('error', $this->validator->getErrors());
+                return redirect()->back()->withInput();
+            }
+            $this->userModel->insert($dataToInsert);
+            $db->transCommit();
+            return redirect()->to(base_url('/a/admin/users'))->with('success', 'Berhasil menambah user');
+        } catch (\Exception $e) {
+            $db->transRollback();
+            // $session->setFlashdata('error', $e->getMessage());
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
+        }
+    }
+
+    public function edit($id)
+    {
+        try {
+            $userUpdate = $this->userModel->select('id, username, email, phone, birth_date, nim, role_id, study_id, created_by')->find($id);
+            $rolesModel = new RoleModel();
+            $prodiModel = new ProgramStudyModel();
+            $roles = $rolesModel->whereNotIn('id', [RoleEnum::SUPER_ADMIN])->findAll();
+            $prodies = $prodiModel->findAll();
+
+            $data = [
+                'page'      => ['title' => "Edit User"],
+                'user'      => $userUpdate,
+                'roles'     => $roles,
+                'prodies'   => $prodies,
+            ];
+
+            return view('pages/user/edit_user_view', $data);
+        } catch (PageNotFoundException $e) {
+            return view('errors/404/admin_not_found', ['message' => $e->getMessage()]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function update($id)
+    {
+        $db = \Config\Database::connect();
+        $session = \Config\Services::session();
+        $db->transBegin();
+        try {
+            //code...
+            $role = $this->request->getPost('role');
+            $username = $this->request->getPost('username');
+            $email = $this->request->getPost('email');
+            $phone = $this->request->getPost('phone');
+            $password = password_hash($this->request->getPost('password'), PASSWORD_DEFAULT);
+
+            $validationRule = [
+                'username'  => 'required|max_length[200]',
+                'email'     => 'required|valid_email',
+                'phone'     => 'required|max_length[13]|min_length[11]',
+            ];
+
+            $dataToInsert = [
+                'username'  => $username,
+                'email'     => $email,
+                'phone'     => $phone,
+            ];
+
+            //* Validate if the password is change
+            if ($password) {
+                $dataToInsert['password'] = password_hash($password, PASSWORD_DEFAULT);
+                $validationRule['password'] = 'required|max_length[200]|min_length[8]';
+            }
+
+            //* Validate if role is mahasiswa
+            if ($role == "4") {
+                $validationRule['nim']          = 'required|max_length[12]|min_length[12]';
+                $validationRule['birth_date']   = 'required';
+                $validationRule['prodi_id']        = 'required';
+
+                $dataToInsert['nim']        = $this->request->getPost('nim');
+                $dataToInsert['birth_date'] = $this->request->getPost('birth_date');
+                $dataToInsert['study_id']   = (int) $this->request->getPost('prodi');
+            }
+
+            if (! $this->validate($validationRule)) {
+                $session->setFlashdata('error', $this->validator->getErrors());
+                return redirect()->back()->withInput();
+            }
+
+            $this->userModel->update($id, $dataToInsert);
+            $db->transCommit();
+            return redirect()->to(base_url('/a/admin/users'))->with('success', 'Berhasil memperbaharui data user');
+        } catch (\Exception $e) {
+            // Exception
+            $db->transRollback();
+            return redirect()->back()->with('error', $e->getMessage());
+        } catch (\Throwable $th) {
+            //throw $th;
+            $db->transRollback();
+            return redirect()->back()->with('error', $th->getMessage());
+        }
+    }
+
+    public function delete($id)
+    {
+        $session = \Config\Services::session();
+        try {
+            //code...
+            if($session->get('id') == $id){
+                throw new Exception("Tidak dapat mengapus user yang sedang digunakan", 400);
+            }
+            if($this->userModel->delete($id)){
+                return redirect()->back()->with('success', 'Berhasil menghapus user');
+            }
+            throw new Exception("Gagal menghapus user", 1);
+        } catch (\Throwable $th) {
+            //throw $th;
+            dd($th);
+            return redirect()->back()->with('error', $th->getMessage());
+        }
     }
 }

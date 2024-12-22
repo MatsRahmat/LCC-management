@@ -6,6 +6,9 @@
 
 <?= $this->section('content') ?>
 <div>
+    <div>
+        <a href="<?= base_url('a/admin/users/add') ?>">Add User</a>
+    </div>
     <table width="80%" class="table-auto border-collapse table-border">
         <thead>
             <tr>
@@ -27,11 +30,11 @@
                     <td> <?= esc($user['email']) ?></td>
                     <td> <?= esc($user['phone'] ?? "-") ?></td>
                     <td> <?= esc($user['role'] ?? "-") ?></td>
+                    <td> <?= esc($user['nim'] ?? "-") ?></td>
                     <td> <?= esc($user['prodi'] ?? "-") ?></td>
-                    <td> <?= esc($user['created_by'] ?? "-") ?></td>
                     <td>
-                        <?= anchor('', 'edit') ?>
-                        <?= anchor('', 'delete') ?>
+                        <?= anchor(base_url('/a/admin/users/edit/') . $user['id'], 'edit') ?>
+                        <?= anchor(base_url('/a/admin/users/delete/') . $user['id'], 'delete') ?>
                     </td>
                 </tr>
             <?php endforeach ?>
@@ -77,6 +80,7 @@
         </tfoot>
     </table>
 
-    <?php //var_dump($pagination) ?>
+    <?php //var_dump($pagination) 
+    ?>
 </div>
 <?= $this->endSection() ?>

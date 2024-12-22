@@ -53,16 +53,16 @@
             <input type="password" name="password" id="password" placeholder="**********" required>
         </div>
         <div>
-            <label for="birth-date">Tangal Lahir</label><br>
-            <input type="date" name="birth_date" id="birth-date" min="1990-01-01" max="2007-12-31" required>
+            <label for="phone">Phone</label><br>
+            <input type="number" name="phone" id="phone" placeholder="+62 ..." required>
         </div>
         <div>
             <label for="nim">Nim</label><br>
             <input type="number" inputmode="verbatim" name="nim" id="nim" placeholder="Please insert NIM" required>
         </div>
         <div>
-            <label for="phone">Phone</label><br>
-            <input type="number" name="phone" id="phone" placeholder="08323242" required>
+            <label for="birth-date">Tangal Lahir</label><br>
+            <input type="date" name="birth_date" id="birth-date" min="1990-01-01" max="2007-12-31" required>
         </div>
         <div>
             <label for="prodi">Prodi</label>
@@ -96,6 +96,10 @@
             <input type="password" name="password" id="password" placeholder="**********" required>
         </div>
         <div>
+            <label for="phone">Phone</label><br>
+            <input type="number" name="phone" id="phone" placeholder="+62 ..." required>
+        </div>
+        <div>
             <button type="submit">
                 Register
             </button>
@@ -117,7 +121,7 @@
                 $('[data-type-form="mahasiswa"]').show();
                 $('[data-type-form="outsider"]').hide();
                 $('[data-type-form="outsider"]')[0].reset();
-                
+
             } else if (value == "outsider") {
                 $('[data-type-form="outsider"]').show();
                 $('[data-type-form="mahasiswa"]').hide();
