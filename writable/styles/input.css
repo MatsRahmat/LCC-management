@@ -2,10 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-input, select {
-    @apply border border-black rounded-sm p-1;
+input,
+select {
+  @apply border border-black rounded-sm p-1;
 }
 
 button {
-    @apply p-1 rounded-sm border border-black;
+  @apply p-1 rounded-sm border border-black;
+}
+
+.table-border {
+  @apply border border-black [&_tr]:border [&_tr]:border-black [&_th]:border [&_th]:border-black [&_td]:border [&_td]:border-black;
+}
+
+.btn-anchor {
+  @apply px-2 py-1.5 border border-black rounded-md;
+}
+
+.box {
+  @apply inline-block size-5 border border-black;
 }
