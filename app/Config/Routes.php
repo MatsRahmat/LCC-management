@@ -29,7 +29,7 @@ $routes->group('/a', ['filter' => 'auth'], static function (RouteCollection $rou
     /** ====================== ADMIN ROUTE ======================= */
     $route->group('admin', static function (RouteCollection $route) {
 
-        $route->view('/', 'welcome_message');
+        $route->get('/', 'Admin\DashboardController::index');
 
         $route->group('users', static function (RouteCollection $route) {
             $route->get('/', 'Admin\UserController::index');

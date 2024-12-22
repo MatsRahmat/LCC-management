@@ -17,19 +17,38 @@
     <div class="grid grid-cols-6 bg-[#064470]">
         <div class="px-2 py-3">
             <div class=" space-y-3">
-                <div>
-                    <img src="logo" alt="Logo">
+                <div class="flex justify-center">
+                    <img src="<?= base_url('logo/lcc_logo.jpg') ?>" alt="Logo" class="size-16">
                 </div>
-                <div>
-                    <h2>LCC Actifity Platform</h2>
-                    <h3>Admin Panel</h3>
+                <div class="text-center text-white">
+                    <h2 class="font-bold text-lx">LCC Actifity Platform</h2>
+                    <h3 class="font-semibold text-lg">Admin Panel</h3>
                 </div>
             </div>
             <nav class="mt-5">
                 <div>
                     <ul>
                         <li class="">
-                            <?= anchor(base_url('/a/admin/users'), 'Dashboard') ?>
+                            <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/'), 'title' => 'Dashboard']) ?>
+                        </li>
+                        <li class="">
+                            <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/users'), 'title' => 'Users']) ?>
+                        </li>
+                        <li>
+                            <div class="expand-item" role="button" data-expand="testing">
+                                <div class="py-2 px-1.5 text-white transition-all hover:bg-slate-200 hover:text-black truncate">
+                                    <span class="font-semibold">
+                                        Nested Menu
+                                    </span>
+                                </div>
+                                <div data-expand-target="testing" class="pl-4" style="display: none;">
+                                    <ul>
+                                        <li>
+                                            <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/users'), 'title' => 'Users']) ?>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -49,6 +68,17 @@
     </div>
     <?= $this->renderSection('footer') ?>
     <?= $this->renderSection('script_js') ?>
+    <script>
+        $(document).ready(function() {
+            $('.expand-item').each(function() {
+                $(this).on('click', function() {
+                    const expandName = $(this).attr('data-expand');
+                    // alert(expandName);
+                    $(`[data-expand-target=${expandName}]`).toggle();
+                })
+            })
+        })
+    </script>
 </body>
 
 </html>
