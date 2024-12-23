@@ -22,3 +22,7 @@ button {
 .box {
   @apply inline-block size-5 border border-black;
 }
+
+a[role=button] {
+  @apply border border-b rounded-sm px-2 py-1 inline-block;
+}

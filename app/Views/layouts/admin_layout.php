@@ -38,13 +38,13 @@
                             <div class="expand-item" role="button" data-expand="testing">
                                 <div class="py-2 px-1.5 text-white transition-all hover:bg-slate-200 hover:text-black truncate">
                                     <span class="font-semibold">
-                                        Nested Menu
+                                        Master
                                     </span>
                                 </div>
                                 <div data-expand-target="testing" class="pl-4" style="display: none;">
                                     <ul>
                                         <li>
-                                            <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/users'), 'title' => 'Users']) ?>
+                                            <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/master/questions'), 'title' => 'Question Feedback']) ?>
                                         </li>
                                     </ul>
                                 </div>

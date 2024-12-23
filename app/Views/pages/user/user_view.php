@@ -6,8 +6,8 @@
 
 <?= $this->section('content') ?>
 <div>
-    <div>
-        <a href="<?= base_url('a/admin/users/add') ?>">Add User</a>
+    <div class="my-2">
+        <a href="<?= base_url('a/admin/users/add') ?>" role="button" >Add User</a>
     </div>
     <table width="80%" class="table-auto border-collapse table-border">
         <thead>

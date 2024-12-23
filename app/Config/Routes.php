@@ -30,6 +30,18 @@ $routes->group('/a', ['filter' => 'auth'], static function (RouteCollection $rou
 
         $route->get('/', 'Admin\DashboardController::index');
 
+        /** ====================== MASTER ROUTE ======================= */
+        $route->group('master', static function (RouteCollection $route) {
+
+            /** ====================== QUESTION ROUTE ======================= */
+            $route->get('questions', 'Admin\QuestionController::index');
+            $route->get('questions/add', 'Admin\QuestionController::add');
+            $route->post('questions/insert', 'Admin\QuestionController::insert');
+            $route->get('questions/edit/(:num)', 'Admin\QuestionController::edit/$1');
+            $route->post('questions/update/(:num)', 'Admin\QuestionController::update/$1');
+            // $route->get('question/delete/(:num)', 'Admin\QuestionController::delete/$1');
+        });
+
         /** ====================== USER ROUTE ======================= */
         $route->group('users', static function (RouteCollection $route) {
             $route->get('/', 'Admin\UserController::index');
