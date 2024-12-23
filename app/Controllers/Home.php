@@ -8,4 +8,10 @@ class Home extends BaseController
     {
         return view('welcome_message');
     }
+
+    public function add(){}
+    public function insert(){}
+    public function edit(){}
+    public function update(){}
+    public function delete(){}
 }

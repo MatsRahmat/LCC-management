@@ -4,7 +4,7 @@
 
 input,
 select {
-  @apply border border-black rounded-sm p-1;
+  @apply border border-black rounded-sm py-1 px-2;
 }
 
 button {
@@ -25,4 +25,16 @@ button {
 
 a[role=button] {
   @apply border border-b rounded-sm px-2 py-1 inline-block;
+}
+
+form label {
+ @apply block capitalize
+}
+
+form input {
+  @apply w-full
+}
+
+input[type=checkbox] {
+  @apply size-4;
 }

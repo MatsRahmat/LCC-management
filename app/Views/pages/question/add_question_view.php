@@ -1,15 +1,27 @@
 <?= $this->extend('layouts/admin_layout.php') ?>
 
+<?= $this->section('nav') ?>
+<?= $this->include('partial/navbar.php') ?>
+<?= $this->endSection() ?>
+
 <?= $this->section('content') ?>
-<div>
-    <?= form_open('a/admin/master/questions/insert') ?>
+<div class="m-2 space-y-3">
     <div>
-        <label for="question">Pertanyaan</label>
-        <input type="text" name="question" id="question">
+        <a href="<?= previous_url() ?>" class="inline-block underline px-2 py-1 text-blue-500">
+            Kembali
+        </a>
     </div>
-    <div>
-        <button type="submit">Simpan</button>
+    <div class="border border-black rounded-md p-2">
+        <?= form_open('a/admin/master/questions/insert', ['class' => 'space-y-4']) ?>
+        <div class="">
+            <label for="question">Pertanyaan</label>
+            <input type="text" name="question" id="question" class="w-full cursor-text" placeholder="Apakah anda ...">
+            <!-- <?= view_cell('HelperTextCell', ['message' => 'testing', 'type' => 'error']) ?> -->
+        </div>
+        <div>
+            <button type="submit">Simpan</button>
+        </div>
+        </form>
     </div>
-    </form>
 </div>
 <?= $this->endSection() ?>

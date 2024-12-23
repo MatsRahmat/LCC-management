@@ -3,6 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Helpers\PaginationData;
 use App\Models\QuestionFeedbackModel;
 use CodeIgniter\Database\Exceptions\DataException;
 use CodeIgniter\Exceptions\PageNotFoundException;
@@ -21,17 +22,27 @@ class QuestionController extends BaseController
 
     public function index()
     {
-        $question = $this->model->findAll();
+        $limit = 15;
+        $page = $this->request->getVar('page') ?? 1;
+        $db = \Config\Database::connect();
+        $builder = $db->table('question_feedbacks');
+        $query =  $builder->select('*')->get();
         $data = [
             'page' => ['title' => 'Question'],
-            'questions' => $question
+            'questions' => $query->getResultArray(),
+            'pagination' => PaginationData::generate($builder, $limit, $page)
         ];
         return view('pages/question/question_view.php', $data);
     }
+
     public function add()
     {
-        return view('pages/question/add_question_view.php');
+        $data = [
+            'page' => ['title' => 'Add Question']
+        ];
+        return view('pages/question/add_question_view.php', $data);
     }
+
     public function insert()
     {
         $session = \Config\Services::session();
@@ -55,7 +66,9 @@ class QuestionController extends BaseController
                 'created_by'    => $session->get('id')
             ];
 
-            $this->model->insert($dataToInsert);
+            if (! $this->model->insert($dataToInsert)) {
+                return redirect()->back()->with('error', 'Gagal Menambahkan Pertanyaan');
+            }
             $db->transCommit();
             return redirect()->to(base_url('a/admin/master/questions'))->with('success', 'Berhasil Menambahkan Pertanyaan');
         } catch (\Throwable $th) {
@@ -68,8 +81,10 @@ class QuestionController extends BaseController
     {
         try {
             //code...
-            $data = $this->model->find($id);
-            // dd($data);
+            $data = [
+                'page' => ['title' => 'Edit Question'],
+                'question' => $this->model->find($id)
+            ];
             return view('pages/question/edit_question_view.php', $data);
         } catch (DataException $e) {
             dd($e->getMessage());
@@ -81,15 +96,18 @@ class QuestionController extends BaseController
     }
     public function update($id)
     {
+        $db = \Config\Database::connect();
+        $db->transBegin();
         try {
             //code...
-            dd($this->request);
             $validateRule = [
                 'question' => 'required|max_length[100]',
             ];
+
             if (! $this->validate($validateRule)) {
                 return redirect()->back()->withInput()->with('error', $this->validator->getErrors());
             }
+
             $dataToInput = [
                 'question'  => $this->request->getPost('question'),
                 'status'    => $this->request->getPost('status') ? true : false
@@ -98,11 +116,11 @@ class QuestionController extends BaseController
             if (! $this->model->update($id, $dataToInput)) {
                 return redirect()->back()->with('error', 'Gagal mengubah pertanyaan');
             }
-
+            $db->transCommit();
             return redirect()->to('a/admin/master/questions')->with('success', 'Berhasil mengubah pertanyaan');
         } catch (\Throwable $th) {
             //throw $th;
-            // dd($th->getMessage());
+            $db->transRollback();
             return redirect()->back()->with('error', $th->getMessage());
         }
     }
