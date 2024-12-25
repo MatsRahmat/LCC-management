@@ -5,11 +5,9 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-<div class="m-2 space-y-3">
-    <div>
-        <a href="<?= previous_url() ?>" class="inline-block underline px-2 py-1 text-blue-500">
-            Kembali
-        </a>
+<div class="">
+    <div class="border-b border-black p-3 mb-2">
+        <?= $this->include('partial/back_btn.php') ?>
     </div>
     <div class="border border-black rounded-md p-2">
         <?= form_open('a/admin/master/questions/update/' . $question['id']) ?>
@@ -22,8 +20,8 @@
             <label for="status">Status</label>
             <input type="checkbox" name="status" id="status" <?= $question['status'] ? "checked" : "" ?>>
         </div>
-        <div>
-            <button type="submit">Simpan</button>
+        <div class="flex justify-end px-2">
+            <button type="submit" data-type="submit">Simpan</button>
         </div>
         </form>
     </div>

@@ -2,13 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-input,
-select {
+input[type=number],input[type=text],input[type=password],input[type=email],select {
   @apply border border-black rounded-sm py-1 px-2;
+}
+input[type=date] {
+  @apply border border-black rounded-sm py-[0.20rem] px-2;
 }
 
 button {
   @apply p-1 rounded-sm border border-black;
+}
+
+[data-type="submit"]{
+  @apply bg-sky-600 px-3 py-2 text-white font-medium hover:scale-105 border-none hover:border-white rounded-md;
 }
 
 .table-border {
@@ -36,5 +42,12 @@ form input {
 }
 
 input[type=checkbox] {
-  @apply size-4;
+  @apply size-4 accent-blue-600;
+}
+select {
+  @apply focus:border-black focus:outline-none;
+}
+
+a[data-type=button]{
+    @apply border rounded-md hover:scale-105 focus:scale-95;
 }

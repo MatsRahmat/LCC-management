@@ -9,11 +9,13 @@ use CodeIgniter\Database\Exceptions\DataException;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
+use App\Enums\StateEnum;
 
 class QuestionController extends BaseController
 {
 
     protected QuestionFeedbackModel $model;
+    protected $pages = ['title' => 'Question Feedback', 'path' => ['Admin', 'Master', 'Question Feedback'], 'page_path' => 'a/admin/master/questions'];
 
     public function __construct()
     {
@@ -28,9 +30,9 @@ class QuestionController extends BaseController
         $builder = $db->table('question_feedbacks');
         $query =  $builder->select('*')->get();
         $data = [
-            'page' => ['title' => 'Question'],
-            'questions' => $query->getResultArray(),
-            'pagination' => PaginationData::generate($builder, $limit, $page)
+            'page'          => $this->pages,
+            'questions'     => $query->getResultArray(),
+            'pagination'    => PaginationData::generate($builder, $limit, $page)
         ];
         return view('pages/question/question_view.php', $data);
     }
@@ -38,7 +40,7 @@ class QuestionController extends BaseController
     public function add()
     {
         $data = [
-            'page' => ['title' => 'Add Question']
+            'page' => $this->pages
         ];
         return view('pages/question/add_question_view.php', $data);
     }
@@ -57,7 +59,7 @@ class QuestionController extends BaseController
             $question = $this->request->getPost('question');
 
             if (!$this->validate($validationRule)) {
-                return redirect()->back()->withInput()->with('error', $this->validator->getErrors());
+                return redirect()->back()->withInput()->with(StateEnum::ERRORS, $this->validator->getErrors());
             }
 
             $dataToInsert = [
@@ -67,31 +69,29 @@ class QuestionController extends BaseController
             ];
 
             if (! $this->model->insert($dataToInsert)) {
-                return redirect()->back()->with('error', 'Gagal Menambahkan Pertanyaan');
+                return redirect()->back()->with(StateEnum::ERROR, 'Gagal Menambahkan Pertanyaan');
             }
             $db->transCommit();
-            return redirect()->to(base_url('a/admin/master/questions'))->with('success', 'Berhasil Menambahkan Pertanyaan');
+            return redirect()->to(base_url($this->pages['page_path']))->with(StateEnum::SUCCESS, 'Berhasil Menambahkan Pertanyaan');
         } catch (\Throwable $th) {
-            //throw $th;
             $db->transRollback();
-            return redirect()->back()->withInput()->with('error', $th->getMessage());
+            return redirect()->back()->withInput()->with(StateEnum::ERROR, $th->getMessage());
         }
     }
     public function edit($id)
     {
         try {
-            //code...
             $data = [
-                'page' => ['title' => 'Edit Question'],
-                'question' => $this->model->find($id)
+                'page'      => $this->pages,
+                'question'  => $this->model->find($id)
             ];
             return view('pages/question/edit_question_view.php', $data);
         } catch (DataException $e) {
             dd($e->getMessage());
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect()->back()->with(StateEnum::ERROR, $e->getMessage());
         } catch (\Throwable $th) {
             //throw $th;
-            return redirect()->back()->with('error', $th->getMessage());
+            return redirect()->back()->with(StateEnum::ERROR, $th->getMessage());
         }
     }
     public function update($id)
@@ -105,7 +105,7 @@ class QuestionController extends BaseController
             ];
 
             if (! $this->validate($validateRule)) {
-                return redirect()->back()->withInput()->with('error', $this->validator->getErrors());
+                return redirect()->back()->withInput()->with(StateEnum::ERRORS, $this->validator->getErrors());
             }
 
             $dataToInput = [
@@ -114,15 +114,32 @@ class QuestionController extends BaseController
             ];
 
             if (! $this->model->update($id, $dataToInput)) {
-                return redirect()->back()->with('error', 'Gagal mengubah pertanyaan');
+                return redirect()->back()->with(StateEnum::ERROR, 'Gagal mengubah pertanyaan');
             }
             $db->transCommit();
-            return redirect()->to('a/admin/master/questions')->with('success', 'Berhasil mengubah pertanyaan');
+            return redirect()->to($this->pages['page_path'])->with(StateEnum::SUCCESS, 'Berhasil mengubah pertanyaan');
+        } catch (DataException $e) {
+            $db->transRollback();
+            return redirect()->back()->with(StateEnum::ERROR, $e->getMessage());
         } catch (\Throwable $th) {
             //throw $th;
             $db->transRollback();
-            return redirect()->back()->with('error', $th->getMessage());
+            return redirect()->back()->with(StateEnum::ERROR, $th->getMessage());
         }
     }
-    public function delete($id) {}
+    public function delete($id)
+    {
+        $db = \Config\Database::connect();
+        $db->transBegin();
+        try {
+            $this->model->delete($id);
+            return redirect()->back()->with(StateEnum::SUCCESS, 'Berhasil menghapus pertanyaan');
+        } catch (DataException $e) {
+            $db->transRollback();
+            return redirect()->back()->with(StateEnum::ERROR, 'Gagal Menghapus pertanyaan');
+        } catch (\Throwable $th) {
+            $db->transRollback();
+            return redirect()->back()->with(StateEnum::ERROR, 'Gagal Menghapus pertanyaan');
+        }
+    }
 }

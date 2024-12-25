@@ -6,106 +6,119 @@
 
 <?= $this->section('content') ?>
 
-<div>
-    <div>
-        <?php
-        if (session()->getFlashdata('error')) {
-            echo "<h4>Error</h4>";
-            $errorResponse = session()->getFlashdata('error');
-            if (is_array($errorResponse)) {
-                foreach ($errorResponse as $err) {
-                    echo "<p>{$err}<p>";
-                }
-            } else {
-                echo "<p>{$errorResponse}</p>";
-            }
-        }
-        ?>
+<?php
+$errors = session()->getFlashdata(App\Enums\StateEnum::ERRORS) ?? [];
+?>
+
+<div class="">
+    <div class="border-b border-black p-3 mb-2">
+        <?= $this->include('partial/back_btn.php') ?>
     </div>
-    <div>
-        <label for="role">Role</label>
-        <select name="role" id="role" class="role-select" disabled>
-            <!-- <option selected disabled>-- Pilih Role --</option> -->
+    <div class="px-3">
+        <div>
+            <label for="role">Role</label>
+        </div>
+        <select name="role" id="role" disabled class="role-select rounded-md p-1 w-full">
+            <option selected disabled>-- Pilih Role --</option>
             <?php foreach ($roles as $role): ?>
-                <option value="<?= $role['id'] ?>" <?= $role['id'] == $user['role_id'] ? "selected" : "" ?>> <?= $role['name'] ?> </option>
+                <option value="<?= $role['id'] ?>" <?= $user["role_id"] == $role['id'] ? "selected" : "" ?>> <?= $role['name'] ?> </option>
             <?php endforeach ?>
         </select>
     </div>
+    <div class="overflow-auto overscroll-auto" style="height: calc(80dvh - 5rem);">
+        <?php if ($user['role_id'] == 4): ?>
+            <section id="section-mahasiswa" class="border rounded-md p-2 my-2">
+                <?= form_open(base_url('a/admin/users/insert'), ['method' => 'POST', 'class' => 'space-y-2', 'id' => '']) ?>
+                <input type="hidden" name="role" value="4">
+                <div>
+                    <label for="username">Username</label>
+                    <input type="text" name="username" id="username" required placeholder="Masukan username" value="<?= esc($user['username']) ?>">
+                    <?= isset($errors['username']) ? view_cell('HelperTextCell', ['message' => $errors['username'], 'type' => 'error']) : null ?>
+                </div>
+                <div>
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email" required placeholder="contoh_email@mail.com" value="<?= esc($user['email']) ?>">
+                    <?= isset($errors['email']) ? view_cell('HelperTextCell', ['message' => $errors['email'], 'type' => 'error']) : null ?>
+                </div>
+                <div>
+                    <label for="phone">Phone</label>
+                    <input type="number" name="phone" id="phone" placeholder="+62 ..." required value="<?= esc($user['phone']) ?>">
+                    <?= isset($errors['phone']) ? view_cell('HelperTextCell', ['message' => $errors['phone'], 'type' => 'error']) : null ?>
+                </div>
+                <div>
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" required placeholder="***********">
+                    <?= view_cell('HelperTextCell', ['message' => 'Isi jika ingin mereset nya atau biarkan kosong untuk tetap menggunakan password yang sudah ada', 'type' => 'helper']) ?>
+                    <?= isset($errors['password']) ? view_cell('HelperTextCell', ['message' => $errors['password'], 'type' => 'error']) : null ?>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="nim">Nim</label>
+                        <input type="number" name="nim" id="nim" placeholder="masukan NIM anda" required required value="<?= esc($user['nim']) ?>">
+                        <?= isset($errors['nim']) ? view_cell('HelperTextCell', ['message' => $errors['nim'], 'type' => 'error']) : null ?>
+                    </div>
+                    <div>
+                        <label for="birth_date">Tanggal Lahir</label>
+                        <input type="date" name="birth_date" id="birth_date" placeholder="+62 ..." required value="<?= esc($user['birth_date']) ?>">
+                        <?= isset($errors['birth_date']) ? view_cell('HelperTextCell', ['message' => $errors['birth_date'], 'type' => 'error']) : null ?>
+                    </div>
+                </div>
+                <div>
+                    <label for="prodi">Prodi</label>
+                    <select name="prodi" id="prodi" class="w-full">
+                        <option selected disabled>-- Pilih Prodi --</option>
+                        <?php foreach ($prodies as $prodi): ?>
+                            <option value="<?= $prodi['id'] ?>" <?= $prodi['id'] == $user['study_id'] ? "selected" : "" ?>> <?= esc($prodi['name']) ?> <span>-</span> <?= esc($prodi['code']) ?> </option>
+                        <?php endforeach ?>
+                    </select>
+                    <?= isset($errors['prodi']) ? view_cell('HelperTextCell', ['message' => $errors['prodi'], 'type' => 'error']) : null ?>
+                </div>
+                <div class="flex justify-end my-2">
+                    <button type="submit" data-type="submit">
+                        Simpan
+                    </button>
+                </div>
+                </form>
+            </section>
+        <?php
+        else:
+        ?>
+            <section id="section-other" class="border rounded-md p-2 my-2">
+                <?= form_open(base_url('a/admin/users/insert'), ['method' => 'POST', 'class' => 'space-y-2', 'id' => '']) ?>
+                <input type="hidden" name="role" value="<?= esc($user['role_id']) ?>">
+                <div>
+                    <label for="username">Username</label>
+                    <input type="text" name="username" id="username" required placeholder="Masukan username" value="<?= esc($user['username']) ?>">
+                    <?= isset($errors['username']) ? view_cell('HelperTextCell', ['message' => $errors['username'], 'type' => 'error']) : null ?>
+                </div>
+                <div>
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email" required placeholder="contoh_email@mail.com" value="<?= esc($user['email']) ?>">
+                    <?= isset($errors['email']) ? view_cell('HelperTextCell', ['message' => $errors['email'], 'type' => 'error']) : null ?>
+                </div>
+                <div>
+                    <label for="phone">Phone</label>
+                    <input type="number" name="phone" id="phone" placeholder="+62 ..." required value="<?= esc($user['phone']) ?>">
+                    <?= isset($errors['email']) ? view_cell('HelperTextCell', ['message' => $errors['email'], 'type' => 'error']) : null ?>
+                </div>
+                <div>
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" required placeholder="***********">
+                    <?= view_cell('HelperTextCell', ['message' => 'Isi jika ingin mereset nya atau biarkan kosong untuk tetap menggunakan password yang sudah ada', 'type' => 'helper']) ?>
+                    <?= isset($errors['email']) ? view_cell('HelperTextCell', ['message' => $errors['email'], 'type' => 'error']) : null ?>
+                </div>
+                <div class="flex justify-end my-3">
+                    <button type="submit" data-type="submit">
+                        Simpan
+                    </button>
+                </div>
+                </form>
+            <?php endif ?>
+            </section>
+    </div>
+</div>
+<!-- ======================================================================== -->
 
-    <?php if ($user['role_id'] == 4): ?>
-        <section id="section-mahasiswa">
-            <?= form_open(base_url('a/admin/users/update/') . $user['id'], ['method' => 'POST', 'class' => '', 'id' => '']) ?>
-            <input type="hidden" name="role" value="4">
-            <div>
-                <label for="username">Username</label>
-                <input type="text" name="username" id="username" required placeholder="Masukan username" value="<?= esc($user['username']) ?>">
-            </div>
-            <div>
-                <label for="email">Email</label>
-                <input type="email" name="email" id="email" required placeholder="contoh_email@mail.com" value="<?= esc($user['email']) ?>">
-            </div>
-            <div>
-                <label for="phone">Phone</label><br>
-                <input type="number" name="phone" id="phone" placeholder="+62 ..." required value="<?= esc($user['phone']) ?>">
-            </div>
-            <div>
-                <label for="password">Password</label>
-                <input type="password" name="password" id="password" placeholder="">
-            </div>
-            <div>
-                <label for="nim">Nim</label><br>
-                <input type="number" name="nim" id="nim" placeholder="masukan NIM anda" required value="<?= esc($user['nim']) ?>">
-            </div>
-            <div>
-                <label for="birth_date">Tanggal Lahir</label><br>
-                <input type="date" name="birth_date" id="birth_date" placeholder="+62 ..." required value="<?= esc($user['birth_date']) ?>">
-            </div>
-            <div>
-                <label for="prodi">Prodi</label>
-                <select name="prodi" id="prodi">
-                    <option selected disabled>-- Pilih Prodi --</option>
-                    <?php foreach ($prodies as $prodi): ?>
-                        <option value="<?= $prodi['id'] ?>" <?= $prodi['id'] == $user['study_id'] ? "selected" : "" ?>> <?= esc($prodi['name']) ?> <span>-</span> <?= esc($prodi['code']) ?> </option>
-                    <?php endforeach ?>
-                </select>
-            </div>
-            <div>
-                <button type="submit">
-                    Simpan
-                </button>
-            </div>
-            </form>
-        </section>
-    <?php
-    else:
-    ?>
-        <section id="section-other">
-            <?= form_open(base_url('a/admin/users/update/') . $user['id'], ['method' => 'POST', 'class' => '', 'id' => '']) ?>
-            <input type="hidden" name="role" value="<?= esc($user['role_id']) ?>">
-            <div>
-                <label for="username">Username</label>
-                <input type="text" name="username" id="username" required placeholder="Masukan username" value="<?= esc($user['username']) ?>">
-            </div>
-            <div>
-                <label for="email">Email</label>
-                <input type="email" name="email" id="email" required placeholder="contoh_email@mail.com" value="<?= esc($user['email']) ?>">
-            </div>
-            <div>
-                <label for="phone">Phone</label><br>
-                <input type="number" name="phone" id="phone" placeholder="+62 ..." required value="<?= esc($user['phone']) ?>">
-            </div>
-            <div>
-                <label for="password">Password</label>
-                <input type="password" name="password" id="password" placeholder="" title="isi field password untuk mengubah password atau biarakan kosong untuk tetap menggunakan yang sudah ada">
-            </div>
-            <div>
-                <button type="submit">
-                    Simpan
-                </button>
-            </div>
-            </form>
-        </section>
-    <?php endif ?>
 </div>
 <?= $this->endSection() ?>
 <?= $this->section('script_js') ?>

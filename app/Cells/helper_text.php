@@ -6,4 +6,4 @@
     }
 </style>
 
-<p class="text-helper"><?= $message ?></p>
+<p class="text-helper" style="color: <?= $type == "error" ? "#dc2626" : "#000" ?> ;"><?= $message ?></p>

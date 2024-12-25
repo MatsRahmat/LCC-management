@@ -26,7 +26,7 @@ class CreateQuestionPeriodTable extends Migration
             'updated_at'    => ['type' => 'DATETIME'],
             'deleted_at'    => ['type' => 'DATETIME'],
         ]);
-        $this->forge->addKey('id');
+        $this->forge->addKey('id', true);
         $this->forge->addForeignKey('created_by', 'users', 'id', 'SET NULL', 'SET NULL', 'fk_question_period_created_by');
         $this->forge->createTable('question_periods');
         $this->db->enableForeignKeyChecks();

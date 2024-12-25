@@ -51,5 +51,15 @@ $routes->group('/a', ['filter' => 'auth'], static function (RouteCollection $rou
             $route->post('update/(:num)', 'Admin\UserController::update/$1');
             $route->get('delete/(:num)', 'Admin\UserController::delete/$1');
         });
+
+        /** ====================== QUESTION ROUTE ======================= */
+        $route->group('question-periods', static function (RouteCollection $route) {
+            $route->get('/', 'Admin\QuestionPeriodController::index');
+            $route->get('add', 'Admin\QuestionPeriodController::add');
+            $route->post('insert', 'Admin\QuestionPeriodController::insert');
+            $route->get('edit/(:num)', 'Admin\QuestionPeriodController::edit/$1');
+            $route->post('update/(:num)', 'Admin\QuestionPeriodController::update/$1');
+            $route->get('delete/(:num)', 'Admin\QuestionPeriodController::delete/$1');
+        });
     });
 });

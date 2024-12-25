@@ -4,12 +4,15 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Enums\RoleEnum;
+use App\Enums\StateEnum;
 use App\Helpers\PaginationData;
 use App\Models\ProgramStudyModel;
 use App\Models\RoleModel;
 use App\Models\UserModel;
+use CodeIgniter\Database\Exceptions\DataException;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\ResponseInterface;
+use DateException;
 use Exception;
 
 class UserController extends BaseController
@@ -17,6 +20,7 @@ class UserController extends BaseController
     protected UserModel $userModel;
     protected $helpers = [];
     protected $builder;
+    protected $pages = ['title' => 'User', 'path' => ['Admin', 'User'], 'page_path' => 'a/admin/users'];
 
     public function __construct()
     {
@@ -47,6 +51,7 @@ class UserController extends BaseController
         $paginationData = PaginationData::generate($builder, $limit, $page);
 
         $data = [
+            'page'          => $this->pages,
             'users'         => $query->getResultArray(),
             'pagination'    => $paginationData
         ];
@@ -63,9 +68,9 @@ class UserController extends BaseController
         $prodiModel = new ProgramStudyModel();
         $roles = $roleModel->whereNotIn('id', [RoleEnum::SUPER_ADMIN])->findAll();
         $data = [
-            'page' => ['title' => 'Add User'],
-            'roles' => $roles,
-            'prodies' => $prodiModel->findAll()
+            'page'      => $this->pages,
+            'roles'     => $roles,
+            'prodies'   => $prodiModel->findAll()
         ];
         return view('pages/user/add_user_view', $data);
     }
@@ -107,16 +112,14 @@ class UserController extends BaseController
             }
 
             if (! $this->validate($validationRule)) {
-                $session->setFlashdata('error', $this->validator->getErrors());
-                return redirect()->back()->withInput();
+                return redirect()->back()->withInput()->with(StateEnum::ERRORS, $this->validator->getErrors());
             }
             $this->userModel->insert($dataToInsert);
             $db->transCommit();
-            return redirect()->to(base_url('/a/admin/users'))->with('success', 'Berhasil menambah user');
-        } catch (\Exception $e) {
+            return redirect()->to(base_url($this->pages['page_path']))->with(StateEnum::SUCCESS, 'Berhasil menambah user');
+        } catch (\Throwable $e) {
             $db->transRollback();
-            // $session->setFlashdata('error', $e->getMessage());
-            return redirect()->back()->withInput()->with('error', $e->getMessage());
+            return redirect()->back()->withInput()->with(StateEnum::ERRORS, $e->getMessage());
         }
     }
 
@@ -130,17 +133,17 @@ class UserController extends BaseController
             $prodies = $prodiModel->findAll();
 
             $data = [
-                'page'      => ['title' => "Edit User"],
+                'page'      => $this->pages,
                 'user'      => $userUpdate,
                 'roles'     => $roles,
                 'prodies'   => $prodies,
             ];
 
             return view('pages/user/edit_user_view', $data);
-        } catch (PageNotFoundException $e) {
-            return view('errors/404/admin_not_found', ['message' => $e->getMessage()]);
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+        } catch (DataException $e) {
+            return redirect()->back()->with(StateEnum::ERROR, $e->getMessage());
+        } catch (\Throwable $e) {
+            return redirect()->back()->with(StateEnum::ERROR, $e->getMessage());
         }
     }
 
@@ -193,34 +196,41 @@ class UserController extends BaseController
 
             $this->userModel->update($id, $dataToInsert);
             $db->transCommit();
-            return redirect()->to(base_url('/a/admin/users'))->with('success', 'Berhasil memperbaharui data user');
-        } catch (\Exception $e) {
+            return redirect()->to(base_url('/a/admin/users'))->with(StateEnum::SUCCESS, 'Berhasil memperbaharui data user');
+        } catch (DateException $e) {
             // Exception
             $db->transRollback();
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect()->back()->withInput()->with(StateEnum::ERROR, $e->getMessage());
         } catch (\Throwable $th) {
             //throw $th;
             $db->transRollback();
-            return redirect()->back()->with('error', $th->getMessage());
+            return redirect()->back()->with(StateEnum::ERROR, $th->getMessage());
         }
     }
 
     public function delete($id)
     {
         $session = \Config\Services::session();
+        $db = \Config\Database::connect();
+        $db->transBegin();
         try {
-            //code...
-            if($session->get('id') == $id){
+            if ($session->get('id') == $id) {
                 throw new Exception("Tidak dapat mengapus user yang sedang digunakan", 400);
             }
-            if($this->userModel->delete($id)){
-                return redirect()->back()->with('success', 'Berhasil menghapus user');
+            if ($this->userModel->delete($id)) {
+                $db->transCommit();
+                return redirect()->back()->with(StateEnum::SUCCESS, 'Berhasil menghapus user');
             }
             throw new Exception("Gagal menghapus user", 1);
+        } catch (DateException $e) {
+            $db->transRollback();
+            return redirect()->back()->with(StateEnum::ERROR, $e->getMessage());
+        } catch (Exception $e) {
+            $db->transRollback();
+            return redirect()->back()->with(StateEnum::ERROR, $e->getMessage());
         } catch (\Throwable $th) {
-            //throw $th;
-            dd($th);
-            return redirect()->back()->with('error', $th->getMessage());
+            $db->transRollback();
+            return redirect()->back()->with(StateEnum::ERROR, $th->getMessage());
         }
     }
 }
