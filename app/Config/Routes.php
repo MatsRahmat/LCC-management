@@ -52,7 +52,7 @@ $routes->group('/a', ['filter' => 'auth'], static function (RouteCollection $rou
             $route->get('delete/(:num)', 'Admin\UserController::delete/$1');
         });
 
-        /** ====================== QUESTION ROUTE ======================= */
+        /** ====================== QUESTION PERIOD ROUTE ======================= */
         $route->group('question-periods', static function (RouteCollection $route) {
             $route->get('/', 'Admin\QuestionPeriodController::index');
             $route->get('add', 'Admin\QuestionPeriodController::add');
@@ -60,6 +60,19 @@ $routes->group('/a', ['filter' => 'auth'], static function (RouteCollection $rou
             $route->get('edit/(:num)', 'Admin\QuestionPeriodController::edit/$1');
             $route->post('update/(:num)', 'Admin\QuestionPeriodController::update/$1');
             $route->get('delete/(:num)', 'Admin\QuestionPeriodController::delete/$1');
+        });
+
+        /** ====================== FINANCE ROUTE ======================= */
+        $route->group('finances', static function (RouteCollection $route) {
+            $route->get('/', 'Admin\TransactionController::index');
+            $route->get('add', 'Admin\TransactionController::create');
+            $route->post('insert', 'Admin\TransactionController::insert');
+            $route->get('edit/(:num)', 'Admin\TransactionController::edit/$1');
+            $route->post('update/(:num)', 'Admin\TransactionController::update/$1');
+            $route->get('more/income', 'Admin\TransactionController::income');
+            $route->get('more/outcome', 'Admin\TransactionController::outcome');
+            $route->get('more/all', 'Admin\TransactionController::allHistory');
+            $route->get('delete/(:num)', 'Admin\TransactionController::delete/$1');
         });
     });
 });

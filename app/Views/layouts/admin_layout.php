@@ -36,6 +36,9 @@
                             <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/users'), 'title' => 'Users']) ?>
                         </li>
                         <li class="">
+                            <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/finances'), 'title' => 'Keuangan']) ?>
+                        </li>
+                        <li class="">
                             <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/question-periods'), 'title' => 'Question Period']) ?>
                         </li>
                         <li>
