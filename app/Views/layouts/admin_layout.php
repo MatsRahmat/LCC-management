@@ -16,50 +16,60 @@
 
 <body>
     <div class="grid grid-cols-6 bg-[#064470]">
-        <div class="px-2 py-3">
-            <div class=" space-y-3">
-                <div class="flex justify-center">
-                    <img src="<?= base_url('logo/lcc_logo.jpg') ?>" alt="Logo" class="size-16">
+        <div class="px-2 py-3 flex flex-col justify-between">
+            <div>
+                <div class=" space-y-3">
+                    <div class="flex justify-center">
+                        <img src="<?= base_url('logo/lcc_logo.jpg') ?>" alt="Logo" class="size-16">
+                    </div>
+                    <div class="text-center text-white">
+                        <h2 class="font-bold text-lx">LCC Actifity Platform</h2>
+                        <h3 class="font-semibold text-lg">Admin Panel</h3>
+                    </div>
                 </div>
-                <div class="text-center text-white">
-                    <h2 class="font-bold text-lx">LCC Actifity Platform</h2>
-                    <h3 class="font-semibold text-lg">Admin Panel</h3>
-                </div>
+                <nav class="mt-5">
+                    <div>
+                        <ul>
+                            <li class="">
+                                <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/'), 'title' => 'Dashboard']) ?>
+                            </li>
+                            <li class="">
+                                <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/users'), 'title' => 'Users']) ?>
+                            </li>
+                            <li class="">
+                                <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/finances'), 'title' => 'Keuangan']) ?>
+                            </li>
+                            <li class="">
+                                <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/question-periods'), 'title' => 'Question Period']) ?>
+                            </li>
+                            <li class="">
+                                <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/payment-attachments'), 'title' => 'Bukti Pembayaran']) ?>
+                            </li>
+                            <li>
+                                <div class="expand-item" role="button" data-expand="testing">
+                                    <div class="py-2 px-1.5 text-white transition-all hover:bg-slate-200 hover:text-black truncate">
+                                        <span class="font-semibold">
+                                            Master
+                                        </span>
+                                    </div>
+                                    <div data-expand-target="testing" class="pl-4" style="display: none;">
+                                        <ul>
+                                            <li>
+                                                <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/master/questions'), 'title' => 'Question Feedback']) ?>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
             </div>
-            <nav class="mt-5">
-                <div>
-                    <ul>
-                        <li class="">
-                            <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/'), 'title' => 'Dashboard']) ?>
-                        </li>
-                        <li class="">
-                            <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/users'), 'title' => 'Users']) ?>
-                        </li>
-                        <li class="">
-                            <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/finances'), 'title' => 'Keuangan']) ?>
-                        </li>
-                        <li class="">
-                            <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/question-periods'), 'title' => 'Question Period']) ?>
-                        </li>
-                        <li>
-                            <div class="expand-item" role="button" data-expand="testing">
-                                <div class="py-2 px-1.5 text-white transition-all hover:bg-slate-200 hover:text-black truncate">
-                                    <span class="font-semibold">
-                                        Master
-                                    </span>
-                                </div>
-                                <div data-expand-target="testing" class="pl-4" style="display: none;">
-                                    <ul>
-                                        <li>
-                                            <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/master/questions'), 'title' => 'Question Feedback']) ?>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+            <div class="mb-5">
+                <a href="<?= base_url('auth/logout') ?>" class="inline-block w-full ">
+                    <button class="w-[inherit] text-white bg-sky-600 font-medium rounded-md">Logout</button>
+                </a>
+            </div>
         </div>
         <div class="h-screen col-span-5 grid grid-rows-11">
             <div>

@@ -73,7 +73,7 @@ $fmt = new NumberFormatter('id_ID', NumberFormatter::CURRENCY);
                         <td colspan="4">Total</td>
                         <td class="border border-black text-left" colspan="2">
                             <span class="font-bold text-red-500">
-                                <?= $fmt->formatCurrency(esc($total_income), 'IDR') ?>
+                                <?= $fmt->formatCurrency(esc($total_outcome), 'IDR') ?>
                             </span>
                         </td>
                     </tr>

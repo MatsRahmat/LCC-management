@@ -60,6 +60,12 @@ writable/session/*
 writable/uploads/*
 !writable/uploads/index.html
 
+#-------------------------
+# Uploaded file and storage dir
+#-------------------------
+!writable/uploads/storage
+writable/uploads/storage/*
+
 writable/debugbar/*
 !writable/debugbar/.gitkeep
 

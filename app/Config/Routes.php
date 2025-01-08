@@ -7,6 +7,8 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index'); // LANDING PAGE
 
+$routes->get('storage/(:segment)', 'FileController::serve/$1'); // For serve static file
+
 /** ====================== ROUTE FOR AUTH ===================== */
 $routes->group("auth", static function (RouteCollection $route) {
     $route->get("login", 'AuthController::index');
@@ -73,6 +75,16 @@ $routes->group('/a', ['filter' => 'auth'], static function (RouteCollection $rou
             $route->get('more/outcome', 'Admin\TransactionController::outcome');
             $route->get('more/all', 'Admin\TransactionController::allHistory');
             $route->get('delete/(:num)', 'Admin\TransactionController::delete/$1');
+        });
+
+        /** ====================== PAYMENT ATTACHMENT ROUTE ======================= */
+        $route->group('payment-attachments', static function (RouteCollection $route) {
+            $route->get('/', 'Admin\PaymentAttachmentController::index');
+            $route->get('add', 'Admin\PaymentAttachmentController::add');
+            $route->post('insert', 'Admin\PaymentAttachmentController::insert');
+            $route->get('edit/(:num)', 'Admin\PaymentAttachmentController::edit/$1');
+            $route->post('update/(:num)', 'Admin\PaymentAttachmentController::update/$1');
+            $route->get('delete/(:num)', 'Admin\PaymentAttachmentController::delete/$1');
         });
     });
 });

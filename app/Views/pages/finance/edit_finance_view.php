@@ -11,6 +11,9 @@ $errors = session()->getFlashdata(App\Enums\StateEnum::ERRORS) ?? [];
 
 <?= $this->section('content') ?>
 <section>
+    <div class="p-2 border-b border-black mb-3">
+        <?= $this->include("partial/back_btn") ?>
+    </div>
     <?= form_open($page['page_path'] . '/update/' . $trans['id'], ['class' => '']) ?>
     <div class="border rounded-md p-2 space-y-2">
         <div>

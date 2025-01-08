@@ -1,0 +1,70 @@
+
+    <!-- Form when type mahasiswa -->
+    <form action="<?= base_url("auth/pushRegister") ?>" method="post" data-type-form="mahasiswa">
+        <input type="hidden" name="role_id" value="4">
+        <div>
+            <label for="username">Username</label><br>
+            <input type="text" name="username" id="username" placeholder="full name" required>
+        </div>
+
+        <div>
+            <label for="email">Email</label><br>
+            <input type="email" name="email" id="email" placeholder="example@gmail.com" required>
+        </div>
+        <div>
+            <label for="password">Password</label><br>
+            <input type="password" name="password" id="password" placeholder="**********" required>
+        </div>
+        <div>
+            <label for="phone">Phone</label><br>
+            <input type="number" name="phone" id="phone" placeholder="+62 ..." required>
+        </div>
+        <div>
+            <label for="nim">Nim</label><br>
+            <input type="number" inputmode="verbatim" name="nim" id="nim" placeholder="Please insert NIM" required>
+        </div>
+        <div>
+            <label for="birth-date">Tangal Lahir</label><br>
+            <input type="date" name="birth_date" id="birth-date" min="1990-01-01" max="2007-12-31" required>
+        </div>
+        <div>
+            <label for="prodi">Prodi</label>
+            <select name="study_id" id="prodi">
+                <option disabled selected>-- Select Type --</option>
+                <?php foreach ($prodies as $prodi): ?>
+                    <option value="<?= $prodi['id'] ?>"> <?= $prodi['name'] ?> - <?= $prodi["code"] ?> </option>
+                <?php endforeach ?>
+            </select>
+        </div>
+        <div>
+            <button type="submit">
+                Register
+            </button>
+        </div>
+    </form>
+
+    <!-- Form when type mahasiswa -->
+    <form action="<?= base_url("auth/pushRegister") ?>" method="post" data-type-form="outsider">
+        <input type="hidden" name="role_id" value="5">
+        <div>
+            <label for="username">Username</label><br>
+            <input type="text" name="username" id="username" placeholder="full name" required>
+        </div>
+        <div>
+            <label for="email">Email</label><br>
+            <input type="email" name="email" id="email" placeholder="example@gmail.com" required>
+        </div>
+        <div>
+            <label for="password">Password</label><br>
+            <input type="password" name="password" id="password" placeholder="**********" required>
+        </div>
+        <div>
+            <label for="phone">Phone</label><br>
+            <input type="number" name="phone" id="phone" placeholder="+62 ..." required>
+        </div>
+        <div>
+            <button type="submit">
+                Register
+            </button>
+        </div>
+    </form>

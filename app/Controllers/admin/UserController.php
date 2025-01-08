@@ -34,7 +34,7 @@ class UserController extends BaseController
         $search = $this->request->getVar('search');
         $page = $this->request->getVar('page') ?? 1;
 
-        $limit = 10;
+        $limit = 5;
         $offset = ($page - 1) * $limit;
 
         $builder = $this->builder;
@@ -47,6 +47,8 @@ class UserController extends BaseController
             $builder->where('username', $search);
         }
         $query = $builder->orderBy('id', 'DESC')->get($limit, $offset);
+        // $totalData = $builder->where('u.deleted_at', null)->countAllResults();
+        // dd($totalData,$builder);
 
         $paginationData = PaginationData::generate($builder, $limit, $page);
 

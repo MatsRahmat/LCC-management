@@ -236,8 +236,10 @@ class TransactionController extends BaseController
 
         $sumAmount = $this->model->selectSum('amount')->where('type_id', TransactionTypeEnum::INCOME)->findAll($limit, $offset);
 
+        $modifiedPage = $this->pages;
+        $modifiedPage['path'] = ['Admin', 'Keuangan', 'Pemasukan'];
         $data = [
-            'page' => $this->pages,
+            'page' => $modifiedPage,
             'incomes' => $query->getResultArray(),
             'total_income' => is_array($sumAmount) && count($sumAmount) > 0 ? $sumAmount[0]['amount'] : 0,
             'pagination'    => PaginationData::generate($builder, $limit, $page)
@@ -262,8 +264,10 @@ class TransactionController extends BaseController
 
         $sumAmount = $this->model->selectSum('amount')->where('type_id', TransactionTypeEnum::OUTCOME)->findAll($limit, $offset);
 
+        $modifieldPage = $this->pages;
+        $modifieldPage['path'] = ['Admin', 'Keuangan', 'Pengeluaran'];
         $data = [
-            'page' => $this->pages,
+            'page' => $modifieldPage,
             'outcomes' => $query->getResultArray(),
             'total_outcome' => is_array($sumAmount) && count($sumAmount) > 0 ? $sumAmount[0]['amount'] : 0,
             'pagination'    => PaginationData::generate($builder, $limit, $page)

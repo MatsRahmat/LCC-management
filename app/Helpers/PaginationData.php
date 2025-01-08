@@ -2,12 +2,14 @@
 
 namespace App\Helpers;
 
+use CodeIgniter\Database\MySQLi\Builder;
+
 class PaginationData
 {
-    public static function generate($builder, $limit, $page)
+    public static function generate(Builder $builder, $limit, $page)
     {
-        $totalPage = ceil($builder->countAll() / $limit);
-        $totalData = $builder->countAll();
+        $totalData = $builder->countAllResults();
+        $totalPage = ceil($totalData / $limit);
         return [
             'curent_page'   => $page,
             'prev_page'     => $page - 1 >= 1 ? $page - 1 : null,
@@ -19,4 +21,3 @@ class PaginationData
 }
 
 // 
-
