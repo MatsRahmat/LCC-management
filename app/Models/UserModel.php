@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use CodeIgniter\Database\BaseBuilder;
+use CodeIgniter\Database\MySQLi\Builder;
 use CodeIgniter\Model;
 
 class UserModel extends Model
@@ -43,4 +45,17 @@ class UserModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function getWithRoleAndProdi($id = null)
+    {
+        $builder = $this->select('users.id, users.username, users.email, users.phone, users.birth_date as "birth date", users.nim, users.created_at as "created at", r.name as role, CONCAT(ps.name, "-", ps.code) as "prodi"')
+            ->join('roles r', 'users.role_id = r.id', 'left')
+            ->join('program_studies ps', 'users.study_id = ps.id', 'left')
+            ->orderBy('id', 'DESC');
+
+        if (isset($id) && $id != null) {
+            return $builder->where('users.id', $id);
+        }
+        return $builder;
+    }
 }

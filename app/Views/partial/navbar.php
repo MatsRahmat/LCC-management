@@ -19,7 +19,7 @@
         <div class="flex items-center gap-3">
             <img src="<?= base_url('icons/noprofile.gif') ?>" alt="Profile" class="rounded-full size-8">
             <div class="text-white font-semibold">
-                <?= anchor(base_url('a/admin/profile'), session()->get('username') ?? 'Admin', ['class' => 'hover:underline']) ?>
+                <?= anchor(base_url('a/admin/profile/') . session()->get('id'), session()->get('username') ?? 'Admin', ['class' => 'hover:underline']) ?>
             </div>
         </div>
     </div>

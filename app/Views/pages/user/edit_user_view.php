@@ -28,7 +28,7 @@ $errors = session()->getFlashdata(App\Enums\StateEnum::ERRORS) ?? [];
     <div class="overflow-auto overscroll-auto" style="height: calc(80dvh - 5rem);">
         <?php if ($user['role_id'] == 4): ?>
             <section id="section-mahasiswa" class="border rounded-md p-2 my-2">
-                <?= form_open(base_url('a/admin/users/insert'), ['method' => 'POST', 'class' => 'space-y-2', 'id' => '']) ?>
+                <?= form_open(base_url('a/admin/users/update/') . $user['id'], ['method' => 'POST', 'class' => 'space-y-2', 'id' => '']) ?>
                 <input type="hidden" name="role" value="4">
                 <div>
                     <label for="username">Username</label>
@@ -47,7 +47,7 @@ $errors = session()->getFlashdata(App\Enums\StateEnum::ERRORS) ?? [];
                 </div>
                 <div>
                     <label for="password">Password</label>
-                    <input type="password" name="password" id="password" required placeholder="***********">
+                    <input type="password" name="password" id="password" placeholder="***********">
                     <?= view_cell('HelperTextCell', ['message' => 'Isi jika ingin mereset nya atau biarkan kosong untuk tetap menggunakan password yang sudah ada', 'type' => 'helper']) ?>
                     <?= isset($errors['password']) ? view_cell('HelperTextCell', ['message' => $errors['password'], 'type' => 'error']) : null ?>
                 </div>
@@ -84,7 +84,7 @@ $errors = session()->getFlashdata(App\Enums\StateEnum::ERRORS) ?? [];
         else:
         ?>
             <section id="section-other" class="border rounded-md p-2 my-2">
-                <?= form_open(base_url('a/admin/users/insert'), ['method' => 'POST', 'class' => 'space-y-2', 'id' => '']) ?>
+                <?= form_open(base_url('a/admin/users/update/') . $user['id'], ['method' => 'POST', 'class' => 'space-y-2', 'id' => '']) ?>
                 <input type="hidden" name="role" value="<?= esc($user['role_id']) ?>">
                 <div>
                     <label for="username">Username</label>
@@ -103,7 +103,7 @@ $errors = session()->getFlashdata(App\Enums\StateEnum::ERRORS) ?? [];
                 </div>
                 <div>
                     <label for="password">Password</label>
-                    <input type="password" name="password" id="password" required placeholder="***********">
+                    <input type="password" name="password" id="password" placeholder="***********">
                     <?= view_cell('HelperTextCell', ['message' => 'Isi jika ingin mereset nya atau biarkan kosong untuk tetap menggunakan password yang sudah ada', 'type' => 'helper']) ?>
                     <?= isset($errors['email']) ? view_cell('HelperTextCell', ['message' => $errors['email'], 'type' => 'error']) : null ?>
                 </div>

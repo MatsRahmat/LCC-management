@@ -1,6 +1,6 @@
 <div>
-    <a href="<?= $url ?>" style="background: #10b981;">
-        <button class="rounded-md px-2 ">
+    <a href="<?= $url ?>" class="inline-block rounded-md <?= $class ?>">
+        <button class="border-none">
             <?= $text ?>
         </button>
     </a>

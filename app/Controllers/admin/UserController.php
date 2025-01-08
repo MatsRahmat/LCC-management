@@ -47,8 +47,6 @@ class UserController extends BaseController
             $builder->where('username', $search);
         }
         $query = $builder->orderBy('id', 'DESC')->get($limit, $offset);
-        // $totalData = $builder->where('u.deleted_at', null)->countAllResults();
-        // dd($totalData,$builder);
 
         $paginationData = PaginationData::generate($builder, $limit, $page);
 
@@ -160,7 +158,7 @@ class UserController extends BaseController
             $username = $this->request->getPost('username');
             $email = $this->request->getPost('email');
             $phone = $this->request->getPost('phone');
-            $password = password_hash($this->request->getPost('password'), PASSWORD_DEFAULT);
+            $password = $this->request->getPost('password');
 
             $validationRule = [
                 'username'  => 'required|max_length[200]',
@@ -174,6 +172,7 @@ class UserController extends BaseController
                 'phone'     => $phone,
             ];
 
+            // dd($this->request);
             //* Validate if the password is change
             if ($password) {
                 $dataToInsert['password'] = password_hash($password, PASSWORD_DEFAULT);
@@ -233,6 +232,21 @@ class UserController extends BaseController
         } catch (\Throwable $th) {
             $db->transRollback();
             return redirect()->back()->with(StateEnum::ERROR, $th->getMessage());
+        }
+    }
+
+    public function profile($id)
+    {
+        $db = \Config\Database::connect();
+        try {
+            $user = $this->userModel->getWithRoleAndProdi($id)->first();
+            $data = [
+                'page' => ['title' => 'Profile', 'path' => ['User', 'Profile'], 'page_path' => 'a/admin'],
+                'user' => $user
+            ];
+            return view('pages/admin_profile/admin_profile_view', $data);
+        } catch (\Throwable $th) {
+            //throw $th;
         }
     }
 }

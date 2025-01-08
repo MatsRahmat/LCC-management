@@ -31,6 +31,7 @@ $routes->group('/a', ['filter' => 'auth'], static function (RouteCollection $rou
     $route->group('admin', static function (RouteCollection $route) {
 
         $route->get('/', 'Admin\DashboardController::index');
+        $route->get('profile/(:num)', 'Admin\UserController::profile/$1');
 
         /** ====================== MASTER ROUTE ======================= */
         $route->group('master', static function (RouteCollection $route) {

@@ -18,7 +18,7 @@ $errors = session()->getFlashdata(StateEnum::ERRORS) ?? [] ?>
     <div>
         <label for="desc">Keterangan</label>
         <textarea name="desc" id="desc" class="w-full border border-black rounded-md p-2"><?= old('desc') ?? null ?></textarea>
-        <?= isset($errors['desc']) ? view_cell('HelpetTextCell', ['type' => 'error', 'message' => $errors['desc']]) : null ?>
+        <?= isset($errors['desc']) ? view_cell('HelperTextCell', ['type' => 'error', 'message' => $errors['desc']]) : null ?>
     </div>
     <div>
         <label for="">Bukti pembayaran</label>

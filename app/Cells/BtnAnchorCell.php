@@ -9,4 +9,5 @@ class BtnAnchorCell extends Cell
     public string $url = "";
     public string $text = "";
     public string $style = "";
+    public string $class = "";
 }
