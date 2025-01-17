@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Link to tailwindcss in public directory -->
     <link rel="stylesheet" href="<?= base_url("styles/style.css") ?>">
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script> -->
+     <script src="<?= base_url('js/jquery-3.7.1.js') ?>"></script>
+     <script src="https://cdn.jsdelivr.net/npm/prompts-js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <?= $this->renderSection('header') ?>
     <title>
@@ -34,16 +36,19 @@
                                 <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/'), 'title' => 'Dashboard']) ?>
                             </li>
                             <li class="">
-                                <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/users'), 'title' => 'Users']) ?>
+                                <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/payment-attachments'), 'title' => 'Bukti Pembayaran']) ?>
                             </li>
                             <li class="">
                                 <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/finances'), 'title' => 'Keuangan']) ?>
                             </li>
                             <li class="">
-                                <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/question-periods'), 'title' => 'Question Period']) ?>
+                                <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/question-periods'), 'title' => 'Survey Kepuasan']) ?>
                             </li>
                             <li class="">
-                                <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/payment-attachments'), 'title' => 'Bukti Pembayaran']) ?>
+                                <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/users'), 'title' => 'User']) ?>
+                            </li>
+                            <li class="">
+                                <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/posts'), 'title' => 'Post']) ?>
                             </li>
                             <li>
                                 <div class="expand-item" role="button" data-expand="testing">
@@ -55,7 +60,7 @@
                                     <div data-expand-target="testing" class="pl-4" style="display: none;">
                                         <ul>
                                             <li>
-                                                <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/master/questions'), 'title' => 'Question Feedback']) ?>
+                                                <?= view_cell('LinkSidebarCell', ['target_url' => base_url('a/admin/master/questions'), 'title' => 'Pertanyaan Survey']) ?>
                                             </li>
                                         </ul>
                                     </div>

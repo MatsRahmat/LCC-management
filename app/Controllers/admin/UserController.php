@@ -38,10 +38,11 @@ class UserController extends BaseController
         $offset = ($page - 1) * $limit;
 
         $builder = $this->builder;
-        $builder->select('u.id, u.username, u.email, u.phone, u.nim, r.name role, ps.name prodi, u.created_by');
-        $builder->where('u.deleted_at IS NULL');
-        $builder->join('roles as r', 'r.id = u.role_id', 'left');
-        $builder->join('program_studies ps', 'u.study_id = ps.id', 'left');
+        $builder->select('u.id, u.username, u.email, u.phone, u.nim, r.name role, ps.name prodi, us.username as created_by')
+            ->where('u.deleted_at IS NULL')
+            ->join('roles as r', 'r.id = u.role_id', 'left')
+            ->join('program_studies ps', 'u.study_id = ps.id', 'left')
+            ->join('users us', 'us.id = u.created_by', 'left');
 
         if ($search) {
             $builder->where('username', $search);
@@ -99,7 +100,8 @@ class UserController extends BaseController
                 'email'     => $email,
                 'phone'     => $phone,
                 'password'  => $password,
-                'role_id'      => (int) $role
+                'role_id'      => (int) $role,
+                'created_by' => $session->get('id')
             ];
             if ($role == "4") {
                 $validationRule['nim']          = 'required|max_length[12]|min_length[12]';

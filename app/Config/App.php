@@ -200,6 +200,8 @@ class App extends BaseConfig
      */
     public bool $CSPEnabled = false;
 
+    public $maxSize = 100 * 1024 * 1024; // 100MB
+
     /**
      * --------------------------------------------------------------------------
      * Session Config
@@ -217,3 +219,8 @@ class App extends BaseConfig
      public $cookieHTTPOnly = true; // HTTP(S) only
 
 }
+
+/**
+ * 8388608
+ * 17796026
+ */

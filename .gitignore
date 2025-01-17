@@ -64,6 +64,8 @@ writable/uploads/*
 # Uploaded file and storage dir
 #-------------------------
 !writable/uploads/storage
+!writable/uploads/posts
+!writable/uploads/posts/*
 writable/uploads/storage/*
 
 writable/debugbar/*

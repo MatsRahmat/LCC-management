@@ -24,4 +24,19 @@ class FileController extends BaseController
             return redirect()->back()->with(StateEnum::ERROR, $th->getMessage());
         }
     }
+    public function post($filename)
+    {
+        try {
+            $filepath = WRITEPATH . 'uploads/posts/' . $filename;
+            if (!file_exists($filepath)) {
+                return redirect()->back()->with(StateEnum::ERROR, 'File not found for ' .  $filename);
+            }
+
+            $fileInfo = new File($filepath);
+            $mimeType = $fileInfo->getMimeType();
+            return $this->response->setHeader('Content-Type', $mimeType)->setBody(file_get_contents($filepath));
+        } catch (\Throwable $th) {
+            return redirect()->back()->with(StateEnum::ERROR, $th->getMessage());
+        }
+    }
 }

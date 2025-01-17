@@ -8,6 +8,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Home::index'); // LANDING PAGE
 
 $routes->get('storage/(:segment)', 'FileController::serve/$1'); // For serve static file
+$routes->get('posts/(:segment)', 'FileController::post/$1'); // For serve static post file
 
 /** ====================== ROUTE FOR AUTH ===================== */
 $routes->group("auth", static function (RouteCollection $route) {
@@ -24,7 +25,7 @@ $routes->group('/a', ['filter' => 'auth'], static function (RouteCollection $rou
     /** ====================== USER ROUTE ======================= */
     //                        VALIDATE ROLE
     $route->group('/', ['filter' => 'role'], static function (RouteCollection $route) {
-        $route->view('/', 'pages/posts/post_view');
+        $route->view('/', 'pages/posts/user_post_view');
     });
 
     /** ====================== ADMIN ROUTE ======================= */
@@ -86,6 +87,16 @@ $routes->group('/a', ['filter' => 'auth'], static function (RouteCollection $rou
             $route->get('edit/(:num)', 'Admin\PaymentAttachmentController::edit/$1');
             $route->post('update/(:num)', 'Admin\PaymentAttachmentController::update/$1');
             $route->get('delete/(:num)', 'Admin\PaymentAttachmentController::delete/$1');
+        });
+
+        /** ====================== POST ROUTE ======================= */
+        $route->group('posts', static function (RouteCollection $route) {
+            $route->get('/', 'Admin\PostController::index');
+            $route->get('add', 'Admin\PostController::add');
+            $route->post('insert', 'Admin\PostController::insert');
+            $route->get('edit/(:num)', 'Admin\PostController::edit/$1');
+            $route->post('update/(:num)', 'Admin\PostController::update/$1');
+            $route->get('delete/(:num)', 'Admin\PostController::delete/$1');
         });
     });
 });
