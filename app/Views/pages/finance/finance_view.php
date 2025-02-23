@@ -5,6 +5,9 @@
 <?= $this->endSection() ?>
 
 <?php
+
+use App\Enums\RoleEnum;
+
 $fmt = new NumberFormatter('id_ID', NumberFormatter::CURRENCY);
 ?>
 
@@ -23,9 +26,11 @@ $fmt = new NumberFormatter('id_ID', NumberFormatter::CURRENCY);
             <div class="flex justify-between my-1 items-center">
                 <h3 class="font-medium">Riwayat Terakhir</h3>
                 <div>
-                    <a href="<?= current_url() . "/add" ?>" data-type="button" class="bg-green-400 inline-block py-1 px-2">
-                        <span class="text-sm">tambah</span>
-                    </a>
+                    <?php if (session()->get('role') == RoleEnum::ACCOUNTING): ?>
+                        <a href="<?= current_url() . "/add" ?>" data-type="button" class="bg-green-400 inline-block py-1 px-2">
+                            <span class="text-sm">tambah</span>
+                        </a>
+                    <?php endif ?>
                     <a href="<?= current_url() . "/more/income" ?>" data-type="button" class="bg-sky-500 inline-block py-1 px-2">
                         <span class="text-sm">detail</span>
                     </a>
@@ -83,9 +88,11 @@ $fmt = new NumberFormatter('id_ID', NumberFormatter::CURRENCY);
             <div class="flex justify-between my-1 items-center">
                 <h3 class="font-medium">Riwayat Terakhir</h3>
                 <div>
-                    <a href="<?= current_url() . "/add" ?>" data-type="button" class="bg-green-400 inline-block py-1 px-2">
-                        <span class="text-sm">tambah</span>
-                    </a>
+                    <?php if (session()->get('role') == RoleEnum::ACCOUNTING): ?>
+                        <a href="<?= current_url() . "/add" ?>" data-type="button" class="bg-green-400 inline-block py-1 px-2">
+                            <span class="text-sm">tambah</span>
+                        </a>
+                    <?php endif ?>
                     <a href="<?= current_url() . "/more/outcome" ?>" data-type="button" class="bg-sky-500 inline-block py-1 px-2">
                         <span class="text-sm">detail</span>
                     </a>

@@ -6,11 +6,13 @@ use App\Controllers\BaseController;
 use App\Enums\StateEnum;
 use App\Enums\TransactionTypeEnum;
 use App\Helpers\PaginationData;
+use App\Libraries\Tcpdf;
 use App\Models\FinanceModel;
 use App\Models\TransactionModel;
 use App\Models\TransactionTypeModel;
 use CodeIgniter\Database\Exceptions\DataException;
 use CodeIgniter\HTTP\ResponseInterface;
+use NumberFormatter;
 
 class TransactionController extends BaseController
 {
@@ -27,7 +29,7 @@ class TransactionController extends BaseController
 
         $builder = $db->table('transactions t');
         $builderIncome = $builder
-            ->select('t.id as id, t.amount as amount, t.desc as desc, t.created_at as created_at, u.username as username')
+            ->select('t.id as id, t.amount as amount, t.desc as desc, t.created_at as created_at, u.username as usersname')
             ->where('t.type_id', TransactionTypeEnum::INCOME)
             ->where('t.deleted_at', null)
             ->join('users u', 't.created_by = u.id', 'left')
@@ -306,6 +308,86 @@ class TransactionController extends BaseController
 
             return view('pages/finance/finance_all_view', $data);
         } catch (\Throwable $th) {
+            return redirect()->back()->with(StateEnum::ERROR, $th->getMessage());
+        }
+    }
+
+    public function report()
+    {
+        try {
+            $db = \Config\Database::connect();
+            $builder = $db->table('transactions t');
+            $limit = 10;
+            $page = $this->request->getVar('page') ?? 1;
+            $offset = ($page - 1) * $limit;
+
+            $builder->select('t.id as id, t.amount as amount, tt.name as type, t.type_id as type_id,  t.desc as desc, t.created_at as created_at, u.username as created_by')
+                // ->where('t.type_id', TransactionTypeEnum::OUTCOME)
+                ->where('t.deleted_at', null)
+                ->join('users u', 'u.id = t.created_by', 'left')
+                ->join('transaction_types tt', 't.type_id = tt.id', 'left')
+                ->orderBy('t.id', 'DESC');
+            $query = $builder->get();
+
+            $sumOfOutcome = $this->model->selectSum('amount')->where('type_id', TransactionTypeEnum::OUTCOME)->findAll($limit, $offset);
+            $sumOfIncome = $this->model->selectSum('amount')->where('type_id', TransactionTypeEnum::INCOME)->findAll($limit, $offset);
+
+            $sumAmount = (int)$sumOfIncome[0]['amount'] - (int)$sumOfOutcome[0]['amount'];
+
+            $transaction = $query->getResultArray();
+            $data = [
+                'page' => $this->pages,
+                'transactions' => $transaction,
+                'total' => $sumAmount,
+                'pagination'    => PaginationData::generate($builder, $limit, $page)
+            ];
+
+            // dd($data);
+            $fmt = new NumberFormatter('id_ID', NumberFormatter::CURRENCY);
+
+            $pdf = new Tcpdf();
+            $pdf->AddPage();
+            $pdf->setFont('helvetica', 12);
+
+            $html = '<h1>Transaction Report</h1>';
+            $html .= '<table border="1" >
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Keterangan</th>
+                            <th>Dibuat Oleh</th>
+                            <th>Tanggal</th>
+                            <th>Jenis</th>
+                            <th>Jumlah</th>
+                        </tr>
+                    </thead>
+                    <tbody>';
+
+            foreach ($transaction as $index => $trans) {
+                $html .= '<tr>
+                        <td>' . $index + 1 . '</td>
+                        <td>' . $trans["desc"] . '</td>
+                        <td>' . $trans["created_by"] . '</td>
+                        <td>' . date('d/m/Y H:i', strtotime($trans['created_at'])) . '</td>
+                        <td>' . $trans["type"] . '</td>
+                        <td>
+                            ' .  $fmt->formatCurrency($trans['amount'], 'IDR') . '
+                        </td>
+                </tr>';
+            }
+
+            $html .= '</tbody></table>';
+
+            // echo $html;
+            // Tcpdf::generate($html, 'trans_report.pdf');
+            $pdf->writeHTML($html, true, false, true, false, '');
+
+            // Output the PDF as a download
+            $pdf->Output('trans_report.pdf', 'D');
+
+            // return view('pages/finance/finance_all_view', $data);
+        } catch (\Throwable $th) {
+            // dd($th);
             return redirect()->back()->with(StateEnum::ERROR, $th->getMessage());
         }
     }

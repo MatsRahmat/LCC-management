@@ -8,20 +8,69 @@
 <section class="space-y-2">
     <div class="flex justify-between items-center border-b py-2 shadow-sm">
         <div>
-            <a href="<?= "posts/add" ?>" data-type="button" class="bg-green-400 inline-block p-2">
-                <div class="flex flex-col items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000">
-                        <path d="M444-444H240v-72h204v-204h72v204h204v72H516v204h-72v-204Z" />
-                    </svg>
-                </div>
-            </a>
+            <?php
+
+            use App\Enums\RoleEnum;
+
+            $role = session()->get('role');
+
+            if ($role == RoleEnum::ADMINISTRATOR || $role == RoleEnum::SUPER_ADMIN): ?>
+                <a href="<?= "posts/add" ?>" data-type="button" class="bg-green-400 inline-block p-2">
+                    <div class="flex flex-col items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000">
+                            <path d="M444-444H240v-72h204v-204h72v204h204v72H516v204h-72v-204Z" />
+                        </svg>
+                    </div>
+                </a>
+            <?php endif ?>
         </div>
         <div class="flex gap-3">
             <p>
                 Total post: <?= isset($total_post) ? $total_post : 0 ?>
             </p>
-            <div>
-                pagination
+            <div class="">
+                <p>Pagination: </p>
+                <?php
+                if ($pagination['prev_page'] != null) {
+                    $href = current_url() . "?page=" . $pagination['prev_page'];
+                    echo '<a href="{$href}" data-type="button" class="bg-sky-500 inline-block p-1">
+                    <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                            <path d="M640-80 240-480l400-400 71 71-329 329 329 329-71 71Z" />
+                        </svg>
+                    </div>
+                </a>';
+                }
+
+                echo '<div class="font-medium">';
+
+                if ($pagination['prev_page'] != null) {
+                    echo "<span>{$pagination['prev_page']}</span>";
+                }
+
+                echo "<span>{$pagination['curent_page']}</span>";
+
+                if ($pagination['next_page'] != null) {
+                    echo "<span>{$pagination['next_page']}</span>";
+                }
+
+                if ($pagination['total_page'] > 3) {
+                    echo "<span>...</span>
+                    <span>{$pagination['total_data']}</span>";
+                }
+
+                echo "</div>";
+                if ($pagination['next_page'] != null) {
+                    $href = current_url() . "?page=" . $pagination['next_page'];
+                    echo '<a href="{$href}" data-type="button" class="bg-sky-500 inline-block p-1">
+                    <div class="rotate-180">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                            <path d="M640-80 240-480l400-400 71 71-329 329 329 329-71 71Z" />
+                        </svg>
+                    </div>
+                </a>';
+                }
+                ?>
             </div>
         </div>
     </div>

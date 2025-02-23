@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Enums\RoleEnum;
 use App\Enums\StateEnum;
 use App\Helpers\PaginationData;
+use App\Libraries\Tcpdf;
 use App\Models\ProgramStudyModel;
 use App\Models\RoleModel;
 use App\Models\UserModel;
@@ -250,5 +251,78 @@ class UserController extends BaseController
         } catch (\Throwable $th) {
             //throw $th;
         }
+    }
+
+    public function report()
+    {
+
+        $users = $this->userModel->getWithRoleAndProdi()->findAll();
+        // dd($users);
+        $pdf = new Tcpdf();
+        $pdf->AddPage();
+        $pdf->setFont('helvetica', 12);
+
+        // $html = '<h1>User Report</h1>';
+        // $html .= '<table width="80%" class="">
+        //             <thead>
+        //                 <tr>
+        //                     <th>id</th>
+        //                     <th>Username</th>
+        //                     <th>Email</th>
+        //                     <th>Phone</th>
+        //                     <th>Role</th>
+        //                     <th>Nim</th>
+        //                     <th>Prodi</th>
+        //                 </tr>
+        //             </thead>
+        //             <tbody>';
+        // foreach ($users as $user) {
+        //     $html .= '<tr>
+        //             <td>' . $user['id'] . '</td>
+        //             <td>' . $user['username'] . '</td>
+        //             <td>' . $user['email'] . '</td>
+        //             <td>' . $user['phone'] ?? "-" . '</td>
+        //             <td>' . $user['role'] ?? "-" . '</td>
+        //             <td>' . $user['nim'] ?? "-" . '</td>
+        //             <td>' . $user['prodi'] ?? "-" . '</td>
+        //         </tr>';
+        // }
+        // $html .= '</tbody></table>';
+
+        $html = '<h1>User Report</h1>';
+        $html .= '<table border="1" cellpadding="5">
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Role</th>
+                            <th>Nim</th>
+                            <th>Prodi</th>
+                        </tr>
+                    </thead>
+                    <tbody>';
+
+        foreach ($users as $user) {
+            $html .= '<tr>
+                        <td>' . $user["id"] . '</td>
+                        <td>' . $user["username"] . '</td>
+                        <td>' . $user["email"] . '</td>
+                        <td>' . $user["phone"]. '</td>
+                        <td>' . $user["role"]. '</td>
+                        <td>' . $user["nim"]. '</td>
+                        <td>' . $user["prodi"]. '</td>
+                </tr>';
+        }
+
+        $html .= '</tbody></table>';
+
+        // echo $html;
+        // Tcpdf::generate($html, 'user_report.pdf');
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        // Output the PDF as a download
+        $pdf->Output('user_report.pdf', 'D');
     }
 }

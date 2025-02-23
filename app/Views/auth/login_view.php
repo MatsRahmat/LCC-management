@@ -12,7 +12,7 @@ $error = session()->getFlashdata(StateEnum::ERROR);
 ?>
 <?= $this->section('content') ?>
 <section class=" grid place-items-center bg-gradient-radial from-purple-700 to-[#05304E]" style="height: calc(100dvh - 4rem);">
-    <div class="glass rounded-md border border-black w-[30rem] p-5">
+    <div class="glass rounded-md border border-black w-[23rem] max-w-[27rem] p-5">
         <h3 class="text-center text-3xl font-bold py-2">Login</h3>
         <form action="<?= base_url("auth/pushLogin") ?>" method="post" class="">
             <div class="px-2 space-y-4 py-2">

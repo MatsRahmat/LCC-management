@@ -5,7 +5,7 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/', 'Home::index'); // LANDING PAGE
+$routes->get('/', 'DashboardController::index'); // LANDING PAGE
 
 $routes->get('storage/(:segment)', 'FileController::serve/$1'); // For serve static file
 $routes->get('posts/(:segment)', 'FileController::post/$1'); // For serve static post file
@@ -54,6 +54,8 @@ $routes->group('/a', ['filter' => 'auth'], static function (RouteCollection $rou
             $route->get('edit/(:num)', 'Admin\UserController::edit/$1');
             $route->post('update/(:num)', 'Admin\UserController::update/$1');
             $route->get('delete/(:num)', 'Admin\UserController::delete/$1');
+            $route->get('report', 'Admin\UserController::report');
+
         });
 
         /** ====================== QUESTION PERIOD ROUTE ======================= */
@@ -77,6 +79,8 @@ $routes->group('/a', ['filter' => 'auth'], static function (RouteCollection $rou
             $route->get('more/outcome', 'Admin\TransactionController::outcome');
             $route->get('more/all', 'Admin\TransactionController::allHistory');
             $route->get('delete/(:num)', 'Admin\TransactionController::delete/$1');
+            $route->get('more/all/report', 'Admin\TransactionController::report');
+
         });
 
         /** ====================== PAYMENT ATTACHMENT ROUTE ======================= */

@@ -1,4 +1,4 @@
-<div class="flex items-center px-2 h-full justify-between">
+<div class="flex items-center bg-primary px-2 h-[4rem] justify-between">
     <div>
         <h1 class="font-medium text-lg text-white"> <?= esc($page['title'] ?? "Dasboard") ?></h1>
         <div class="text-white">

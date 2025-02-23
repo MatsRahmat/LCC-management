@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Enums\StateEnum;
+use App\Helpers\PaginationData;
 use App\Models\PostAttachmentModel;
 use App\Models\PostModel;
 use CodeIgniter\Database\Exceptions\DataException;
@@ -22,6 +23,7 @@ class PostController extends BaseController
     protected PostAttachmentModel $attchModel;
     protected $db;
     protected $session;
+    protected $builder;
 
     public function __construct()
     {
@@ -29,6 +31,7 @@ class PostController extends BaseController
         $this->attchModel = new PostAttachmentModel();
         $this->db = Database::connect();
         $this->session = Services::session();
+        $this->builder = $this->db->table('posts');
 
         // $config['upload_path'] = './uploads/';
         // $config['allowed_types'] = 'gif|jpg|png';
@@ -38,11 +41,35 @@ class PostController extends BaseController
     }
     public function index()
     {
-        $posts = $this->model->getPostWithAttachment();
+
+        $page = $this->request->getVar('page') ?? 1;
+
+        $limit = 10;
+        $offset = ($page - 1) * $limit;
+
+        $builder = $this->builder;
+
+        $builder->select('posts.*, users.username as created_by_name')
+            ->join('users', 'users.id = posts.created_by', 'left');
+
+        $query = $builder->orderBy('id', 'DESC')->get($limit, $offset);
+
+        $posts = $query->getResultArray();
+
+        $paginationData = PaginationData::generate($builder, $limit, $page);
+
+        foreach ($posts as $index => $post) {
+            $attachModel = new PostAttachmentModel();
+            $attach = $attachModel->where('post_id', $post['id'])->findAll();
+
+            $posts[$index]['attachments'] = $attach;
+        }
+
         $data = [
             'page' => $this->page,
             'posts' => $posts,
-            'total_post' => $this->model->countAllResults()
+            'total_post' => $this->model->countAllResults(),
+            'pagination' => $paginationData
         ];
         return view('pages/posts/admin_post_view', $data);
     }
