@@ -65,7 +65,7 @@ writable/uploads/*
 #-------------------------
 !writable/uploads/storage
 !writable/uploads/posts
-!writable/uploads/posts/*
+writable/uploads/posts/*
 writable/uploads/storage/*
 
 writable/debugbar/*

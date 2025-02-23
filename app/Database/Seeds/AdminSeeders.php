@@ -13,7 +13,7 @@ class AdminSeeders extends Seeder
         //
         $dataAdmin = [
             'username' => getenv('admin.name') ?? "Super Admin",
-            'email' => getenv('admin.email') ?? 'Admin@mail.com',
+            'email' => getenv('admin.email') ?? 'admin@mail.com',
             'password' => password_hash(getenv('admin.password') ?? 'admin#2024', PASSWORD_DEFAULT),
             'role_id' => 1,
         ];
