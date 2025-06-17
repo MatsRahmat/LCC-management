@@ -1,0 +1,42 @@
+# version: '3.7'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # image: lcc_app_image
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/var/www/html
+    # depends_on:
+    #   - db
+    # restart: unless-stopped
+    container_name: lcc_app_container
+    command: ["php", "spark", "serve", "--host=0.0.0.0"]
+
+  # db:
+  #   image: mysql:latest
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: "root"
+  #     MYSQL_DATABASE: "lcc_activity_platform"
+  #   restart: unless-stopped
+  #   ports:
+  #     - "3306:3306"
+  #   volumes:
+  #     - ./database:/var/lib/mysql
+  #   container_name: lcc_app_db_container
+
+# volumes:
+#   db_data:
+
+# Override default configuration for production
+# prod:
+#   app:
+#     environment:
+#       APP_ENV: $$CI_ENVIRONMENT
+#     volumes:
+#       - ./php-prod.ini:/usr/local/etc/php/php.ini
+#     restart: unless-stopped
+#     command: ["apache2-foreground"]
